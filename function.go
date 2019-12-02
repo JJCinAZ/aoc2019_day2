@@ -32,13 +32,13 @@ func Part2(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pgm := parseInput(string(input))
-	pgm[1] = 12
-	pgm[2] = 2
 	noun := 0
 	verb := 0
 	for ; noun <= 99; noun++ {
 		for ; verb <= 99; verb++ {
 			pgmCopy := append([]int(nil), pgm...)
+			pgmCopy[1] = noun
+			pgmCopy[2] = verb
 			execPgm(pgmCopy)
 			if pgmCopy[0] == 19690720 {
 				break
@@ -46,7 +46,8 @@ func Part2(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Write([]byte(strconv.FormatInt(int64(100*noun+verb), 10)))
+	w.Write([]byte(fmt.Sprintf("noun=%d, verb=%d, result=%d",
+		noun, verb, 100*noun+verb)))
 }
 
 func parseInput(input string) []int {
