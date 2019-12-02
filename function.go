@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func HelloWorld(w http.ResponseWriter, r *http.Request) {
+func Part1(w http.ResponseWriter, r *http.Request) {
 	input, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Missing input", http.StatusNotAcceptable)
@@ -23,6 +23,30 @@ func HelloWorld(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Write([]byte(strconv.FormatInt(int64(pgm[0]), 10)))
+}
+
+func Part2(w http.ResponseWriter, r *http.Request) {
+	input, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		http.Error(w, "Missing input", http.StatusNotAcceptable)
+		return
+	}
+	pgm := parseInput(string(input))
+	pgm[1] = 12
+	pgm[2] = 2
+	noun := 0
+	verb := 0
+	for ; noun <= 99; noun++ {
+		for ; verb <= 99; verb++ {
+			pgmCopy := append([]int(nil), pgm...)
+			execPgm(pgmCopy)
+			if pgmCopy[0] == 19690720 {
+				break
+			}
+		}
+	}
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Write([]byte(strconv.FormatInt(100*noun+verb, 10)))
 }
 
 func parseInput(input string) []int {
