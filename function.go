@@ -46,7 +46,7 @@ func Part2(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Write([]byte(strconv.FormatInt(100*noun+verb, 10)))
+	w.Write([]byte(strconv.FormatInt(int64(100*noun+verb), 10)))
 }
 
 func parseInput(input string) []int {
