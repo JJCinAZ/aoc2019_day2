@@ -32,24 +32,29 @@ func Part2(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pgm := parseInput(string(input))
+	result := findSolution(pgm)
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Write([]byte(fmt.Sprintf("result=%d", result)))
+}
+
+func findSolution(pgm []int) int {
 	noun := 0
 	verb := 0
+	pgmCopy := make([]int, len(pgm))
+	OUTER:
 	for ; noun <= 99; noun++ {
-		for ; verb <= 99; verb++ {
-			pgmCopy := append([]int(nil), pgm...)
+		for verb = 0; verb <= 99; verb++ {
+			copy(pgmCopy, pgm)
 			pgmCopy[1] = noun
 			pgmCopy[2] = verb
 			execPgm(pgmCopy)
 			if pgmCopy[0] == 19690720 {
-				break
+				break OUTER
 			}
 		}
 	}
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.Write([]byte(fmt.Sprintf("noun=%d, verb=%d, result=%d",
-		noun, verb, 100*noun+verb)))
+	return noun*100+verb
 }
-
 func parseInput(input string) []int {
 	a := strings.Split(input, ",")
 	pgm := make([]int, len(a))
